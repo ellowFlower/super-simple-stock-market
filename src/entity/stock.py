@@ -24,3 +24,10 @@ class Stock(ABC):
         :return: the dividend yield regarding the used stock and price
         """
         pass
+
+    def calculate_pe_ratio(self, price: float) -> float:
+        """
+        :param price: the price used for the calculation
+        :return: the P/E ratio regarding the used stock and price
+        """
+        return round(price / self.last_dividend, 5)
