@@ -16,4 +16,5 @@ class TradeRepository:
         :param from_time: time point to get trades from
         :return: all trades for the given stock in the time after from_time
         """
-        return [trade for trade in self.fake_database if trade.stock == stock and trade.timestamp >= from_time]
+        return [trade for trade in self.fake_database if trade.stock.symbol == stock.symbol
+                and trade.timestamp >= from_time]

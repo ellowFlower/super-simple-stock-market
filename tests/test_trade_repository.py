@@ -41,8 +41,8 @@ class MyTestCase(unittest.TestCase):
         result: list = self.sut.get_trades_by_stock_and_time(test_data.STOCK_TEA, self.time_19_55)
 
         # only tea trade is returned (time would be ok for both)
-        self.assertEqual(len(result), 1)
-        self.assertEqual(result[0], self.trade_tea_20)
+        self.assertEqual(1, len(result))
+        self.assertEqual(self.trade_tea_20, result[0])
 
     # two trades from same stock but only one is in correct time range
     def test_record_different_time(self):
