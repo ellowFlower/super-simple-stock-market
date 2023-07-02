@@ -3,9 +3,9 @@ from datetime import datetime
 from unittest import mock
 
 from src.entity.trade import Trade
+from src.model.stock_symbol import StockSymbol
 from src.model.trade_indicator import TradeIndicator
 from src.repository.trade_repository import TradeRepository
-from tests import test_data
 from tests.test_data import STOCK_TEA, STOCK_POP
 
 
@@ -38,7 +38,7 @@ class MyTestCase(unittest.TestCase):
     def test_record_different_stocks(self):
         self.sut.record_trade(self.trade_tea_20)
         self.sut.record_trade(self.trade_pop_20)
-        result: list = self.sut.get_trades_by_stock_and_time(test_data.STOCK_TEA, self.time_19_55)
+        result: list = self.sut.get_trades_by_stock_and_time(StockSymbol.TEA, self.time_19_55)
 
         # only tea trade is returned (time would be ok for both)
         self.assertEqual(1, len(result))
@@ -48,7 +48,7 @@ class MyTestCase(unittest.TestCase):
     def test_record_different_time(self):
         self.sut.record_trade(self.trade_pop_20)
         self.sut.record_trade(self.trade_pop_21)
-        result: list = self.sut.get_trades_by_stock_and_time(test_data.STOCK_POP, self.time_20_30)
+        result: list = self.sut.get_trades_by_stock_and_time(StockSymbol.POP, self.time_20_30)
 
         # only trade from 21:00 is returned
         self.assertEqual(1, len(result))
