@@ -35,7 +35,7 @@ class MyTestCase(unittest.TestCase):
         self.sut = TradeRepository()
 
     # two stocks, both in correct time range but only one has the correct stock.type
-    def test_get_record_different_stocks(self):
+    def test_record_different_stocks(self):
         self.sut.record_trade(self.trade_tea_20)
         self.sut.record_trade(self.trade_pop_20)
         result: list = self.sut.get_trades_by_stock_and_time(test_data.STOCK_TEA, self.time_19_55)
@@ -45,7 +45,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(result[0], self.trade_tea_20)
 
     # two trades from same stock but only one is in correct time range
-    def test_get_record_different_time(self):
+    def test_record_different_time(self):
         self.sut.record_trade(self.trade_pop_20)
         self.sut.record_trade(self.trade_pop_21)
         result: list = self.sut.get_trades_by_stock_and_time(test_data.STOCK_POP, self.time_20_30)
