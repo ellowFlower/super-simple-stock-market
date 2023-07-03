@@ -1,6 +1,7 @@
 import unittest
 
 from src.entity.trade import Trade
+from src.exception.calculation_exception import CalculationException
 from src.model.trade_indicator import TradeIndicator
 from src.repository.stock_repository import StockRepository
 from src.repository.trade_repository import TradeRepository
@@ -59,8 +60,9 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(0, self.stock_service.calculate_dividend_yield(test_data.STOCK_TEA, 200))
         self.assertEqual(0.01538, self.stock_service.calculate_dividend_yield(test_data.STOCK_GIN, 130))
 
-        # TODO division by zero
-        # self.assertEqual(0, self.stock_service.calculate_pe_ratio(test_data.STOCK_TEA, 200))
+        # division by zero handled with custom exception
+        with self.assertRaises(CalculationException):
+            self.assertEqual(0, self.stock_service.calculate_pe_ratio(test_data.STOCK_TEA, 200))
         self.assertEqual(20, self.stock_service.calculate_pe_ratio(test_data.STOCK_GIN, 160))
 
         '''
@@ -77,5 +79,6 @@ class MyTestCase(unittest.TestCase):
         '''
         self.assertEqual(157.44913, self.stock_service.get_gbce_all_share_index())
 
-        if __name__ == '__main__':
-            unittest.main()
+
+if __name__ == '__main__':
+    unittest.main()

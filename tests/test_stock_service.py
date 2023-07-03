@@ -1,10 +1,11 @@
 import unittest
 from datetime import datetime, timedelta
 from unittest import mock
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from src.entity.stock import Stock
 from src.entity.trade import Trade
+from src.exception.calculation_exception import CalculationException
 from src.model.trade_indicator import TradeIndicator
 from src.service.stock_service import StockService
 from tests import test_data
@@ -27,6 +28,10 @@ class TestStockService(unittest.TestCase):
         time_now_mock.datetime.now = mock.Mock(return_value=datetime(2023, 7, 1, 21, 0, 0))
         cls.trade_pop_21_1 = Trade(quantity=2, indicator=TradeIndicator.SELL, price=20.0)
         cls.trade_pop_21_2 = Trade(quantity=1, indicator=TradeIndicator.BUY, price=17.0)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        patch.stopall()
 
     def setUp(self) -> None:
         stock_repository = MagicMock()
@@ -64,7 +69,7 @@ class TestStockService(unittest.TestCase):
 
     def test_calculate_pe_ratio_division_by_zero(self):
         price: float = 19.0
-        with self.assertRaises(ZeroDivisionError):
+        with self.assertRaises(CalculationException):
             self.sut.calculate_pe_ratio(test_data.STOCK_TEA, price)
 
     @mock.patch('src.service.stock_service.datetime')

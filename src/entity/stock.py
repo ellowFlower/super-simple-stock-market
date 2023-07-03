@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from src.entity.trade import Trade
+from src.exception.calculation_exception import CalculationException
 from src.model.stock_symbol import StockSymbol
 
 
@@ -32,5 +33,8 @@ class Stock(ABC):
         :param price: the price used for the calculation
         :return: the P/E ratio regarding the used stock and price
         """
-        # TODO division by zero
-        return round(price / self.last_dividend, 5)
+        try:
+            return round(price / self.last_dividend, 5)
+        except ZeroDivisionError:
+            raise CalculationException(f'Could not calculate the P/E ratio for stock [{self.symbol}] because '
+                                       f'last dividend is 0.')

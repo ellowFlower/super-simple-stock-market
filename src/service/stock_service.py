@@ -2,6 +2,7 @@ import datetime
 import math
 
 from src.entity.stock import Stock
+from src.exception.calculation_exception import CalculationException
 from src.repository.stock_repository import StockRepository
 
 
@@ -33,9 +34,13 @@ class StockService:
         """
         trades_past_x_min = [trade for trade in stock.trades
                              if trade.timestamp >= datetime.datetime.now() - datetime.timedelta(minutes=past_min)]
-        # TODO division by zero
-        return sum(trade.price * trade.quantity for trade in trades_past_x_min) / sum(
-            trade.quantity for trade in trades_past_x_min)
+
+        try:
+            return sum(trade.price * trade.quantity for trade in trades_past_x_min) / sum(
+                trade.quantity for trade in trades_past_x_min)
+        except ZeroDivisionError:
+            raise CalculationException(f'Could not calculate the volume weighted stock price for stock [{stock.symbol}]'
+                                       f' because no trades were made in the last {past_min} minutes.')
 
     def get_all_stocks(self):
         return self.stock_repository.get_all_stocks()
@@ -47,5 +52,7 @@ class StockService:
         stocks = self.stock_repository.get_all_stocks()
         stocks_vwsp = [self.get_volume_weighted_stock_price(datetime.timedelta.max.days, stock) for stock in stocks
                        if stock.trades]
-        # TODO division by zero
-        return round(pow(math.prod(stocks_vwsp), 1 / len(stocks_vwsp)), 5)
+        try:
+            return round(pow(math.prod(stocks_vwsp), 1 / len(stocks_vwsp)), 5)
+        except ZeroDivisionError:
+            raise CalculationException(f'Could not calculate the GBCE All Share Index because no trades were made yet.')
