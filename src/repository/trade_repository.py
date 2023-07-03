@@ -1,20 +1,20 @@
-import datetime
-
+from src.entity.stock import Stock
 from src.entity.trade import Trade
-from src.model.stock_symbol import StockSymbol
+from src.repository.stock_repository import StockRepository
 
 
 class TradeRepository:
-    fake_database: list[Trade] = []
+    def __init__(self, stock_repository: StockRepository):
+        self.fake_database: list[Trade] = []
+        self.stock_repository = stock_repository
 
-    def record_trade(self, trade: Trade):
+    def record_trade(self, trade: Trade, stock: Stock):
+        """
+        Save a trade.
+        :param trade: the trade to save
+        :param stock: the stock of the trade
+        """
         list.append(self.fake_database, trade)
-
-    def get_trades_by_stock_and_time(self, stock_symbol: StockSymbol, from_time: datetime) -> list[Trade]:
-        """
-        :param stock_symbol: stock to get trades for
-        :param from_time: time point to get trades from
-        :return: all trades for the given stock in the time after from_time
-        """
-        return [trade for trade in self.fake_database if trade.stock.symbol == stock_symbol
-                and trade.timestamp >= from_time]
+        # fake db workaround
+        stock.trades.append(trade)
+        self.stock_repository.update(stock)

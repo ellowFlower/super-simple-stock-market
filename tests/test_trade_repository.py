@@ -1,58 +1,27 @@
 import unittest
-from datetime import datetime
-from unittest import mock
+from unittest.mock import MagicMock
 
 from src.entity.trade import Trade
-from src.model.stock_symbol import StockSymbol
 from src.model.trade_indicator import TradeIndicator
 from src.repository.trade_repository import TradeRepository
-from tests.test_data import STOCK_TEA, STOCK_POP
+from tests import test_data
 
 
 class MyTestCase(unittest.TestCase):
     sut: TradeRepository
-    trade_pop_20: Trade
-    trade_tea_20: Trade
-    trade_pop_21: Trade
-    time_19_55: datetime
-    time_20_30: datetime
-
-    @classmethod
-    @mock.patch('src.entity.trade.datetime')
-    def setUpClass(cls, time_trades_executed):
-        time_trades_executed.datetime.now = mock.Mock(return_value=datetime(2023, 7, 1, 20, 0, 0))
-        # trades at 20:00
-        cls.trade_pop_20 = Trade(quantity=100, indicator=TradeIndicator.SELL, price=10.0, stock=STOCK_POP)
-        cls.trade_tea_20 = Trade(quantity=100, indicator=TradeIndicator.BUY, price=10.0, stock=STOCK_TEA)
-        # trade at 21:00
-        time_trades_executed.datetime.now = mock.Mock(return_value=datetime(2023, 7, 1, 21, 0, 0))
-        cls.trade_pop_21 = Trade(quantity=100, indicator=TradeIndicator.SELL, price=10.0, stock=STOCK_POP)
-        # time 19:55
-        cls.time_19_55 = datetime(2023, 7, 1, 19, 55, 0)
-        cls.time_20_30 = datetime(2023, 7, 1, 20, 30, 0)
 
     def setUp(self) -> None:
-        self.sut = TradeRepository()
+        self.service_repository = MagicMock()
+        self.sut = TradeRepository(self.service_repository)
 
-    # two stocks, both in correct time range but only one has the correct stock.type
-    def test_record_different_stocks(self):
-        self.sut.record_trade(self.trade_tea_20)
-        self.sut.record_trade(self.trade_pop_20)
-        result: list = self.sut.get_trades_by_stock_and_time(StockSymbol.TEA, self.time_19_55)
+    def test_record_trade(self):
+        trade: Trade = Trade(quantity=100, indicator=TradeIndicator.BUY, price=10.0)
 
-        # only tea trade is returned (time would be ok for both)
-        self.assertEqual(1, len(result))
-        self.assertEqual(self.trade_tea_20, result[0])
+        self.sut.record_trade(trade, test_data.STOCK_POP)
 
-    # two trades from same stock but only one is in correct time range
-    def test_record_different_time(self):
-        self.sut.record_trade(self.trade_pop_20)
-        self.sut.record_trade(self.trade_pop_21)
-        result: list = self.sut.get_trades_by_stock_and_time(StockSymbol.POP, self.time_20_30)
-
-        # only trade from 21:00 is returned
-        self.assertEqual(1, len(result))
-        self.assertEqual(self.trade_pop_21, result[0])
+        self.assertEqual(1, len(self.sut.fake_database), 'Trade was not recorded.')
+        self.assertEqual(trade, self.sut.fake_database[0], 'Trade was not recorded.')
+        self.service_repository.update.assert_called_once_with(test_data.STOCK_POP)
 
 
 if __name__ == '__main__':
