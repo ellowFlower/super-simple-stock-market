@@ -3,10 +3,11 @@ from datetime import datetime
 from unittest import mock
 from unittest.mock import MagicMock, patch
 
+from src.entity.stock_common import StockCommon
 from src.entity.trade import Trade
+from src.model.stock_symbol import StockSymbol
 from src.model.trade_indicator import TradeIndicator
 from src.service.trade_service import TradeService
-from tests import test_data
 
 
 class MyTestCase(unittest.TestCase):
@@ -19,6 +20,8 @@ class MyTestCase(unittest.TestCase):
         # trades at 20:00
         time_trades_executed.datetime.now = mock.Mock(return_value=datetime(2023, 7, 1, 20, 0, 0))
         cls.trade_pop_20 = Trade(quantity=100, indicator=TradeIndicator.SELL, price=10.0)
+        # stocks
+        cls.stock_pop = StockCommon(symbol=StockSymbol.POP, par_value=100.0, last_dividend=8.0)
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -29,8 +32,8 @@ class MyTestCase(unittest.TestCase):
         self.sut = TradeService(self.trade_repository_mock, MagicMock())
 
     def test_record_trade(self):
-        self.sut.record_trade(self.trade_pop_20, test_data.STOCK_POP)
-        self.trade_repository_mock.record_trade.assert_called_once_with(self.trade_pop_20, test_data.STOCK_POP)
+        self.sut.record_trade(self.trade_pop_20, self.stock_pop)
+        self.trade_repository_mock.record_trade.assert_called_once_with(self.trade_pop_20, self.stock_pop)
 
 
 if __name__ == '__main__':
