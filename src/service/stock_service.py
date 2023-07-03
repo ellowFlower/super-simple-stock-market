@@ -26,7 +26,7 @@ class StockService:
         """
         return stock.calculate_pe_ratio(price)
 
-    def get_volume_weighted_stock_price(self, past_min: int, stock: Stock) -> float:
+    def calculate_volume_weighted_stock_price(self, past_min: int, stock: Stock) -> float:
         """
         :param past_min: the number of minutes to look back for trades
         :param stock: the stock to calculate the volume weighted stock price from
@@ -42,15 +42,13 @@ class StockService:
             raise CalculationException(f'Could not calculate the volume weighted stock price for stock [{stock.symbol}]'
                                        f' because no trades were made in the last {past_min} minutes.')
 
-    def get_all_stocks(self):
-        return self.stock_repository.get_all_stocks()
-
-    def get_gbce_all_share_index(self):
+    def calculate_gbce_all_share_index(self) -> float:
         """
-        :return: the geometric mean of the volume weighted stock prices for all stocks
+        :return: the geometric mean of the volume weighted stock prices for all stocks with trades
         """
         stocks = self.stock_repository.get_all_stocks()
-        stocks_vwsp = [self.get_volume_weighted_stock_price(datetime.timedelta.max.days, stock) for stock in stocks
+        stocks_vwsp = [self.calculate_volume_weighted_stock_price(datetime.timedelta.max.days, stock) for stock in
+                       stocks
                        if stock.trades]
         try:
             return round(pow(math.prod(stocks_vwsp), 1 / len(stocks_vwsp)), 5)

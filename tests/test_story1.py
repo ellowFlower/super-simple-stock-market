@@ -72,12 +72,12 @@ class MyTestCase(unittest.TestCase):
         stock_gin.trades = [
             Trade(quantity=200, indicator=TradeIndicator.BUY, price=140.0)
         ]
-        self.assertEqual(140, self.stock_service.get_volume_weighted_stock_price(5, stock_gin))
+        self.assertEqual(140, self.stock_service.calculate_volume_weighted_stock_price(5, stock_gin))
 
         '''
         Calculate GBCE all share index.
         '''
-        self.assertEqual(157.44913, self.stock_service.get_gbce_all_share_index())
+        self.assertEqual(157.44913, self.stock_service.calculate_gbce_all_share_index())
 
 
 if __name__ == '__main__':

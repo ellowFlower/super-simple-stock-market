@@ -84,7 +84,7 @@ class TestStockService(unittest.TestCase):
 
         time_now_stock_service.datetime.now.return_value = datetime(2023, 7, 1, 21, 2, 0)
         time_now_stock_service.timedelta.return_value = timedelta(minutes=timedelta_min)
-        result: float = self.sut.get_volume_weighted_stock_price(timedelta_min, stock_pop)
+        result: float = self.sut.calculate_volume_weighted_stock_price(timedelta_min, stock_pop)
         self.assertEqual(19, result, 'Volume weighted stock price is wrong.')
 
     def test_get_gbce_all_share_index(self):
@@ -102,7 +102,7 @@ class TestStockService(unittest.TestCase):
             stock_tea, stock_pop, stock_ale, stock_gin, stock_joe
         ]
 
-        result: float = self.sut.get_gbce_all_share_index()
+        result: float = self.sut.calculate_gbce_all_share_index()
         self.assertEqual(36.92887, result, 'GBCE all share index is wrong.')
 
 

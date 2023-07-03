@@ -19,7 +19,7 @@ class StockRepository:
     def get_all_stocks(self) -> list[Stock]:
         return self.fake_database
 
-    def update(self, stock: Stock):
+    def update(self, stock: Stock) -> None:
         for idx, item in enumerate(self.fake_database):
             if stock.symbol == item.symbol:
                 self.fake_database[idx] = stock

@@ -8,7 +8,7 @@ class TradeRepository:
         self.fake_database: list[Trade] = []
         self.stock_repository = stock_repository
 
-    def record_trade(self, trade: Trade, stock: Stock):
+    def record_trade(self, trade: Trade, stock: Stock) -> None:
         """
         Save a trade.
         :param trade: the trade to save
