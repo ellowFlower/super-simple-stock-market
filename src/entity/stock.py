@@ -32,4 +32,5 @@ class Stock(ABC):
         :param price: the price used for the calculation
         :return: the P/E ratio regarding the used stock and price
         """
+        # TODO division by zero
         return round(price / self.last_dividend, 5)

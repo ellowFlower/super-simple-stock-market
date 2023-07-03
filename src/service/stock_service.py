@@ -47,4 +47,5 @@ class StockService:
         stocks = self.stock_repository.get_all_stocks()
         stocks_vwsp = [self.get_volume_weighted_stock_price(datetime.timedelta.max.days, stock) for stock in stocks
                        if stock.trades]
+        # TODO division by zero
         return round(pow(math.prod(stocks_vwsp), 1 / len(stocks_vwsp)), 5)

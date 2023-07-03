@@ -28,8 +28,9 @@ class TestStockService(unittest.TestCase):
         cls.trade_pop_21_1 = Trade(quantity=2, indicator=TradeIndicator.SELL, price=20.0)
         cls.trade_pop_21_2 = Trade(quantity=1, indicator=TradeIndicator.BUY, price=17.0)
 
+    def setUp(self) -> None:
         stock_repository = MagicMock()
-        cls.sut = StockService(stock_repository)
+        self.sut = StockService(stock_repository)
 
     def test_calculate_dividend_yield_common_last_dividend_0(self):
         price: float = 40.0
