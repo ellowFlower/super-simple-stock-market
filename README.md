@@ -2,7 +2,7 @@
 
 This project includes part of the core functionality of a simple stock market.
 
-Run `tests/test_story1.py` to test the functionality of following requirements:
+Functionality implemented:
 
 - For a given stock,
     - Given any price as input, calculate the dividend yield
@@ -24,6 +24,24 @@ Content of the project:
 - `src/service`: Contains the business logic implementation.
 - `src/repositoy`: Contains the data access layer implementation.
 - `tests`: `test_story1.py` integration test for requirements. Other files are classical unit tests.
+
+## Run the project
+
+Commands are tested on ubuntu 22.04.2 with Python 3.10.6.
+
+Create a virtual environment (if you want):
+
+```shell
+cd super-simple-stock-market
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+Run tests:
+
+To run tests from the command line use `python -m unittest -v <path to test file>`. For example, the integration test
+story can be run with `python -m unittest -v tests/test_story1.py`.
 
 ## Assumptions made:
 
