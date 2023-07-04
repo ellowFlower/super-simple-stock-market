@@ -66,6 +66,7 @@ class MyTestCase(unittest.TestCase):
         Calculate dividend yield and P/E ratio.
         '''
         self.assertEqual(0, self.stock_service.calculate_dividend_yield(self.stock_tea, 200))
+        self.assertEqual(0.04, self.stock_service.calculate_dividend_yield(self.stock_pop, 200))
         self.assertEqual(0.01538, self.stock_service.calculate_dividend_yield(self.stock_gin, 130))
 
         # division by zero handled with custom exception

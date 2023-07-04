@@ -20,6 +20,7 @@ Content of the project:
 
 - `src/exception`: Contains custom exceptions.
 - `src/model`: Contains models.
+- `src/entity`: Contains entities stock and trade.
 - `src/service`: Contains the business logic implementation.
 - `src/repositoy`: Contains the data access layer implementation.
 - `tests`: `test_story1.py` integration test for requirements. Other files are classical unit tests.
